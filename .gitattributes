@@ -1,0 +1,6 @@
+﻿# 确保脚本和配置文件在 Windows 检出时保持 LF（Linux 兼容）
+*.sh text eol=lf
+*.css text eol=lf
+user.js text eol=lf
+*.md text eol=lf
+.gitignore text eol=lf
