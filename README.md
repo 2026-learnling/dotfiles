@@ -41,7 +41,7 @@ sudo pacman -S stow git firefox
 ### 安装 Firefox 配置
 
 ```bash
-git clone https://github.com/<你的用户名>/dotfiles.git
+git clone https://github.com/2026-learnling/dotfiles.git
 cd dotfiles
 
 # 方式一：stow 软链接（推荐，后续 git pull 自动同步）
