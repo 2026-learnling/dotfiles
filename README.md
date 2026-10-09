@@ -41,18 +41,23 @@ sudo pacman -S stow git firefox
 ### 安装 Firefox 配置
 
 ```bash
-git clone https://github.com/<你的用户名>/dotfiles.git
+git clone https://github.com/2026-learnling/dotfiles.git
 cd dotfiles
 
-# 方式一：stow 软链接（推荐，后续 git pull 自动同步）
+# 方式一：stow 软链接（默认路径 ~/.mozilla/firefox 时推荐）
 stow -t ~ .mozilla
 bash scripts/setup-firefox.sh
 
-# 方式二：不装 stow，直接跑脚本（自动复制）
+# 方式二：不装 stow，直接跑脚本（自动检测路径，推荐）
 bash scripts/setup-firefox.sh
 ```
 
-> **重要**：`setup-firefox.sh` 会自动定位你机器上的真实 profile（`xxxx.default-release`），并把模板复制过去 + 备份原配置。首次使用请先运行一次 Firefox 生成 profile。
+> **路径自动检测**：脚本会自动识别以下任一 Firefox 配置根目录并安装：
+> - `~/.mozilla/firefox`（默认）
+> - `~/.config/firefox`（XDG 模式）
+> - `~/.config/mozilla/firefox`（XDG 变体）
+>
+> 如果你机器的配置目录是 `~/.config/mozilla/firefox`，直接用**方式二**即可，无需 stow。
 
 ### 安装后
 

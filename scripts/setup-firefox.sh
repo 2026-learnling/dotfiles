@@ -3,14 +3,19 @@
 # dotfiles 安装脚本 — Firefox 极简风格
 # 适用于 GNU Stow 风格仓库：.mozilla/firefox/default-release/
 #
+# 支持两种 Firefox 配置目录（自动检测）：
+#   - ~/.mozilla/firefox          （默认路径）
+#   - ~/.config/firefox           （XDG 模式）
+#   - ~/.config/mozilla/firefox   （XDG 变体）
+#
 # 用法:
-#   方法一（推荐，stow）:
+#   方法一（stow 软链接）:
 #     sudo pacman -S stow
 #     cd dotfiles
-#     stow -t ~ .mozilla        # 软链接到 home
+#     stow -t ~ .mozilla        # 软链接到 home（仅默认路径时推荐）
 #     bash scripts/setup-firefox.sh   # 适配真实 profile 名
 #
-#   方法二（免 stow，脚本全自动）:
+#   方法二（免 stow，脚本全自动，XDG 模式推荐用这个）:
 #     cd dotfiles
 #     bash scripts/setup-firefox.sh
 # ============================================================
@@ -18,23 +23,21 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
-FIREFOX_DIR="$HOME/.mozilla/firefox"
 DATE="$(date +%Y%m%d-%H%M%S)"
 
-echo "=============================================="
-echo "  Firefox 极简风格 安装脚本"
-echo "=============================================="
+# ---- 自动检测 Firefox 配置根目录（多种常见路径） ----
+FIREFOX_DIR=""
+for candidate in "$HOME/.mozilla/firefox" "$HOME/.config/firefox" "$HOME/.config/mozilla/firefox"; do
+  if [ -d "$candidate" ]; then
+    FIREFOX_DIR="$candidate"
+    echo "[✓] 检测到 Firefox 配置目录: $FIREFOX_DIR"
+    break
+  fi
+done
 
-# 1) 检查 Firefox
-if ! command -v firefox >/dev/null 2>&1 && ! command -v firefox-bin >/dev/null 2>&1; then
-  echo "[!] 未检测到 Firefox，请先安装:"
-  echo "    sudo pacman -S firefox   # 或 yay -S firefox-bin"
-  exit 1
-fi
-
-# 2) 检查配置目录
-if [ ! -d "$FIREFOX_DIR" ]; then
-  echo "[!] 未找到 $FIREFOX_DIR，请先运行一次 Firefox 再执行本脚本。"
+if [ -z "$FIREFOX_DIR" ]; then
+  echo "[!] 未找到 Firefox 配置目录（已检查 .mozilla/firefox 与 .config 下的路径）"
+  echo "    请先运行一次 Firefox 生成配置目录后重试。"
   exit 1
 fi
 
