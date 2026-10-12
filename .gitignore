@@ -1,0 +1,17 @@
+# 备份/临时文件
+backup-*/
+*.bak
+*.tmp
+
+# 系统/编辑器
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# 隐私敏感文件（如需托管请自行加密）
+*.asc
+*.gpg
+.ssh/
+.gnupg/

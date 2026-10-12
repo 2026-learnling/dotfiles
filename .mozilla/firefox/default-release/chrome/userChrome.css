@@ -1,0 +1,222 @@
+/*
+ * Firefox 极简单行布局 userChrome.css — Arch Linux 版
+ * 配置思路参考 unixchad 视频《修正firefox: tridactyl, user.js, userChrome.css》
+ * 底层布局借鉴 Bali10050/FirefoxCSS（MPL-2.0）
+ * Linux 适配：窗口控制按钮由桌面环境（WM）提供，Firefox 内部按钮隐藏
+ */
+
+/* ------------------------------------------------------------------ 单行导航栏布局 ------------------------------------------------------------ */
+
+/* 变量 */
+:root{
+  --tab-border-radius: 3px !important; /* 标签圆角 */
+  --toolbarbutton-border-radius: 0 !important; /* 工具栏按钮圆角变量（新版 Firefox） */
+  --urlbar-border-radius: 0 !important;       /* 地址栏圆角变量 */
+  --NavbarWidth: 36; /* 地址栏区域宽度百分比（36-43） */
+  --TabsHeight: 34;  /* 单行高度 */
+  --TabsBorder: 6;   /* 标签下边距 */
+  --NavbarHeightSmall: calc(var(--TabsHeight) + var(--TabsBorder))
+}
+
+/* 宽窗口（>1325px）：只有标签区增长 */
+@media screen and (min-width:1325px) {
+  #nav-bar{
+    margin-top: calc(var(--TabsHeight) * -1px - var(--TabsBorder) * 1px)!important;
+    height: calc(var(--TabsHeight) * 1px + var(--TabsBorder) * 1px)
+  }
+  #TabsToolbar{
+    margin-left: calc(1325px / 100 * var(--NavbarWidth)) !important
+  }
+  #nav-bar{
+    margin-right: calc(100vw - calc(1325px / 100 * var(--NavbarWidth))) !important;
+    vertical-align: center !important
+  }
+  #urlbar-container{
+    min-width: 0px !important;
+    flex: auto !important
+  }
+  toolbarspring{display: none !important}
+}
+
+/* 中窗口（950-1324px）：标签区和导航区同步增长 */
+@media screen and (min-width:950px) and (max-width:1324px) {
+  #nav-bar{
+    margin-top: calc(var(--TabsHeight) * -1px - var(--TabsBorder) * 1px) !important;
+    height: calc(var(--TabsHeight) * 1px + var(--TabsBorder) * 1px)
+  }
+  #TabsToolbar{
+    margin-left: calc(var(--NavbarWidth) * 1vw) !important
+  }
+  #nav-bar{
+    margin-right: calc(100vw - calc(var(--NavbarWidth) * 1vw)) !important;
+    vertical-align: center !important
+  }
+  #urlbar-container{
+    min-width: 0px !important;
+    flex: auto !important
+  }
+  toolbarspring{display: none !important}
+  #TabsToolbar, #nav-bar{transition: margin-top .25s !important}
+}
+
+/* 窄窗口（<950px）：回退两行布局 */
+@media screen and (max-width:949px) {
+  #nav-bar{
+    padding: 0 5px 0 5px!important;
+    height: calc(var(--NavbarHeightSmall) * 1px) !important
+  }
+  toolbarspring{display: none !important;}
+  #TabsToolbar, #nav-bar{transition: margin-top .25s !important}
+}
+#nav-bar, #PersonalToolbar{
+  background-color: #0000 !important;
+  background-image: none !important;
+  box-shadow: none !important
+}
+#nav-bar{margin-left: 3px;}
+.tab-background, .tab-stack {
+  min-height: calc(var(--TabsHeight) * 1px) !important
+}
+
+/* ------------------------------------------------------------------ 元素显示/隐藏 ------------------------------------------------------------- */
+
+/* 汉堡菜单按钮：隐藏 */
+#PanelUI-button {
+  -moz-box-ordinal-group: 0 !important;
+  order: -2 !important;
+  margin: 2px !important;
+  display: none !important;
+}
+
+/* Linux：窗口控制按钮由桌面 WM 提供，隐藏 Firefox 内部按钮 */
+.titlebar-buttonbox-container {
+  display: none !important;
+  margin-right: 12px !important;
+}
+
+/* 前进/后退按钮：隐藏（键盘用 H/L 或 Alt+方向键） */
+#back-button,
+#forward-button {
+  display: none !important;
+}
+
+/* 扩展按钮：保留但排到最左 */
+#unified-extensions-button {
+  order: -3 !important;
+  display: flex !important;
+}
+
+/* 全部标签（v形）按钮：隐藏 */
+#alltabs-button {
+  display: none !important;
+}
+
+/* ------------------------------------------------------------------ 地址栏图标隐藏 ------------------------------------------------------------- */
+
+/* URL 栏内各种图标 */
+#reload-button,
+#identity-permission-box,
+#star-button-box,
+#identity-icon-box,
+#picture-in-picture-button,
+#tracking-protection-icon-container,
+#reader-mode-button,
+#translations-button {
+  display: none !important;
+}
+
+/* "此地址搜索:" 一行 */
+#urlbar .search-one-offs {
+  display: none !important;
+}
+
+/* 地址栏边框/背景：无边框、直角 */
+#urlbar-background {
+  border: none !important;
+  border-radius: 0 !important;
+  transition: .15s !important;
+}
+/* 地址栏本体与下拉面板：一律直角（含聚焦展开状态） */
+#urlbar,
+#urlbar-background,
+#urlbar[breakout][breakout-extend],
+#urlbar[breakout][breakout-extend] #urlbar-background,
+#urlbar-input-container,
+#urlbar-input,
+.urlbarView,
+.urlbarView-body,
+.urlbarView-results,
+.urlbarView-row,
+.urlbarView-row-inner,
+.urlbarView-result-button,
+.urlbarView-type-icon {
+  border-radius: 0 !important;
+}
+
+/* 终极兜底：地址栏区域任何元素都强制直角 */
+#urlbar *,
+.urlbarView * {
+  border-radius: 0 !important;
+}
+
+/* 地址栏未使用/未聚焦时：完全透明融入顶栏 */
+#urlbar:not(:hover):not([breakout][breakout-extend]) > #urlbar-background {
+    box-shadow: none !important;
+    background: #0000 !important;
+}
+
+/* 去除导航栏边框 */
+#navigator-toolbox {
+    border: none !important
+}
+
+/* 窗口失焦时轻微淡化（反馈） */
+#navigator-toolbox-background:-moz-window-inactive {
+  filter: contrast(90%)
+}
+
+/* 全屏警告框简化 */
+#fullscreen-warning {
+  border: none !important;
+  background: -moz-Dialog !important;
+}
+
+/* ------------------------------------------------------------------ 标签关闭按钮 ------------------------------------------------------------- */
+
+/* 非悬停：关闭按钮隐藏（键盘用 Ctrl+W） */
+.tabbrowser-tab:not(:hover) .tab-close-button {
+    opacity: 0% !important;
+    transition: 0.3s !important;
+    display: -moz-box !important;
+}
+.tab-close-button[selected]:not(:hover) {
+    opacity: 45% !important;
+    transition: 0.3s !important;
+    display: -moz-box !important;
+}
+.tabbrowser-tab:hover .tab-close-button {
+    opacity: 50%;
+    transition: 0.3s !important;
+    background: none !important;
+    cursor: pointer;
+    display: -moz-box !important;
+}
+.tab-close-button:hover {
+    opacity: 100% !important;
+    transition: 0.3s !important;
+    background: none !important;
+    cursor: pointer;
+    display: -moz-box !important;
+}
+.tab-close-button[selected]:hover {
+    opacity: 100% !important;
+    transition: 0.3s !important;
+    background: none !important;
+    cursor: pointer;
+    display: -moz-box !important;
+}
+
+/* 书签栏隐藏（视频中不使用书签栏） */
+#PersonalToolbar {
+  display: none !important;
+}
