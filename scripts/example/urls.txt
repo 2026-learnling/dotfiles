@@ -1,0 +1,5 @@
+﻿GitHub	https://github.com/2026-learnling/dotfiles
+Baidu	https://www.baidu.com
+Bing	https://www.bing.com
+Bilibili	https://www.bilibili.com
+Learn C	https://en.cppreference.com

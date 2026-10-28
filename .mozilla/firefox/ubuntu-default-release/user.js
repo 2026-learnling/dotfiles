@@ -1,11 +1,11 @@
-// user.js (firefox) — Arch Linux 版
+// user.js (firefox) — Ubuntu 版
 // 配置参考 unixchad 视频《修正firefox: tridactyl, user.js, userChrome.css》
-// 与 Windows 版保持一致：单行布局 + 深色 + 隐私全家桶 + Bing 默认引擎
+// 与 Windows 版保持一致：单行布局 + 隐私全家桶 + Bing 默认引擎
 
 user_pref("layout.css.devPixelsPerPx", "0.80"); // 全局 UI 缩放 80%，顶栏更矮（视频核心）
 // enable userChrome.css
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
-user_pref("extensions.activeThemeID", "firefox-compact-dark@mozilla.org"); // 深色紧凑主题
+// 主题说明：新版 Firefox 已移除 compact-dark 主题，不再锁定，跟随系统主题
 user_pref("browser.tabs.closeWindowWithLastTab", false); // 关闭最后一个标签不关窗口
 user_pref("browser.newtab.privateAllowed", true);
 user_pref("browser.search.region", "CN"); // 搜索区域保持 CN，避免区域默认逻辑覆盖
